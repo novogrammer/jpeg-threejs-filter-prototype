@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node server/index.mjs",
     "build": "next build",
-    "start": "next start",
+    "start": "NODE_ENV=production node server/index.mjs",
     "lint": "next lint"
   },
   "dependencies": {
@@ -14,6 +14,7 @@
     "@types/react-dom": "18.2.7",
     "eslint": "8.47.0",
     "eslint-config-next": "13.4.19",
+    "express": "^4.18.2",
     "next": "13.4.19",
     "react": "18.2.0",
     "react-dom": "18.2.0",
