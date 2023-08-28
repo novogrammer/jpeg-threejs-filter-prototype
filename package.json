@@ -18,6 +18,11 @@
     "next": "13.4.19",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "stats-gl": "file:../stats-gl",
+    "three": "^0.155.0",
     "typescript": "5.2.2"
+  },
+  "devDependencies": {
+    "@types/three": "^0.155.1"
   }
 }

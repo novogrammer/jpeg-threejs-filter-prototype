@@ -18,23 +18,26 @@ const OUTPUT_IMAGE="./output.jpg";
   try {
     await app.prepare();
     const server = express();
-    server.use(express.json())
+    server.use(express.json({
+      limit:'10mb',
+    }))
 
     const bufferInputImage=await fs.readFile(INPUT_IMAGE);
     const base64InputImage=`data:image/jpeg;base64,${bufferInputImage.toString("base64")}`;
 
     const q=[];
     setInterval(()=>{
-      if(q.length==0){
+      if(q.length<10){
         q.push(base64InputImage);
       }
-    },1000*10);
+    },1000/200);
     // server.get("/add",(req,res)=>{
     //   q.push(base64InputImage);
     //   res.send("added");
     // })
     server.post("/set",(req,res)=>{
-      console.log('setup: data', req.body.data);
+      console.log("post /set");
+      // console.log('setup: data', req.body.data);
       let base64OutputImage=req.body.data;
       if(typeof req.body.data !=="string"){
         res.json({
@@ -45,26 +48,35 @@ const OUTPUT_IMAGE="./output.jpg";
       }
       base64OutputImage=base64OutputImage.replace("data:image/jpeg;base64","");
       const bufferOutputImage=Buffer.from(base64OutputImage,"base64");
-      fs.writeFile(OUTPUT_IMAGE,bufferOutputImage).then(()=>{
+      if(false){
+        fs.writeFile(OUTPUT_IMAGE,bufferOutputImage).then(()=>{
+          res.json({
+            result:"ok",
+          });
+        }).catch((error)=>{
+          if(error instanceof Error){
+            res.json({
+              result:"error",
+              message:error.message,
+            });
+          }else{
+            res.json({
+              result:"error",
+              message:"unknown",
+            });
+          }
+        })
+  
+      }else{
         res.json({
           result:"ok",
         });
-      }).catch((error)=>{
-        if(error instanceof Error){
-          res.json({
-            result:"error",
-            message:error.message,
-          });
-        }else{
-          res.json({
-            result:"error",
-            message:"unknown",
-          });
-        }
-      })
+
+      }
     });
 
     server.get("/get",async (req,res)=>{
+      console.log("get /get");
       const beginTime=performance.now();
       try{
         let currentTime=performance.now();
