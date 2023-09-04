@@ -69,8 +69,6 @@ class MyWorker{
     const scene=new THREE.Scene();
     const camera = new THREE.OrthographicCamera( - 1, 1, 1, - 1, 0, 1 );
     const geometry = new THREE.PlaneGeometry( 2, 2 );
-    // テクスチャのflipYが効かない。
-    geometry.scale(1,-1,1);
 
     const uniforms:MyUniforms = {
       uTexture:{
@@ -115,7 +113,9 @@ class MyWorker{
       const imageBlob=new Blob([arr.buffer],{
         type:"image/jpeg",
       })
-      const imageBitmap=await createImageBitmap(imageBlob);
+      const imageBitmap=await createImageBitmap(imageBlob,{
+        imageOrientation: "flipY",
+      });
 
       // {
       //   return await new Promise((resolve)=>{
@@ -136,9 +136,10 @@ class MyWorker{
       // texture.flipY = ! texture.flipY;
       texture.needsUpdate=true;
       uniforms.uTexture.value=texture;
-      await new Promise((resolve)=>{
-        setTimeout(resolve,1000)
-      })
+      
+      // await new Promise((resolve)=>{
+      //   setTimeout(resolve,1000)
+      // })
 
       renderer.render(scene,camera);
 
